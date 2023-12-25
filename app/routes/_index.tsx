@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/cloudflare";
+import { json, type LoaderFunctionArgs, type MetaFunction } from "@remix-run/cloudflare";
 
 export const meta: MetaFunction = () => {
   return [
@@ -6,6 +6,18 @@ export const meta: MetaFunction = () => {
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
+
+interface Env {
+    SHRNQ: KVNamespace;
+}
+
+export async function loader({context}: LoaderFunctionArgs) {
+    let env = context.env as Env;
+
+     await env.SHRNQ.put("test", "test", {expirationTtl: 60});
+
+    return json({hello: "world"});
+} 
 
 export default function Index() {
   return (
