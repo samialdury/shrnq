@@ -5,7 +5,7 @@ export class KVStore {
         this.ns = namespace
     }
 
-    async put (key: string, value: string) {
+    async put(key: string, value: string) {
         await this.ns.put(key, value)
     }
 

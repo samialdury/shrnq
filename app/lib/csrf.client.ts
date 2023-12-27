@@ -1,1 +1,1 @@
-export  { AuthenticityTokenInput as CSRFInput } from "remix-utils/csrf/react";
+export { AuthenticityTokenInput as CSRFInput } from 'remix-utils/csrf/react'

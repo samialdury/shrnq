@@ -4,51 +4,51 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
-import type { AppLoadContext, EntryContext } from "@remix-run/cloudflare";
-import { RemixServer } from "@remix-run/react";
-import isbot from "isbot";
-import { renderToReadableStream } from "react-dom/server";
-import { NonceProvider } from "./lib/nonce-provider";
-import { combineHeaders } from "./lib/utils";
-import { makeTimings } from "./lib/timing.server";
+import type { AppLoadContext, EntryContext } from '@remix-run/cloudflare'
+import { RemixServer } from '@remix-run/react'
+import { isbot } from 'isbot'
+import { renderToReadableStream } from 'react-dom/server'
+import { NonceProvider } from './lib/nonce-provider'
+import { makeTimings } from './lib/timing.server'
 
 export default async function handleRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  remixContext: EntryContext,
-  // This is ignored so we can keep it in the template for visibility.  Feel
-  // free to delete this parameter in your app if you're not using it!
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  loadContext: AppLoadContext
+    request: Request,
+    responseStatusCode: number,
+    responseHeaders: Headers,
+    remixContext: EntryContext,
+    // This is ignored so we can keep it in the template for visibility.  Feel
+    // free to delete this parameter in your app if you're not using it!
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    loadContext: AppLoadContext,
 ) {
-    const nonce = Math.random().toString(36).slice(2)
-    console.log('\nincoming request\n', {nonce, loadContext})
+    const nonce = crypto.randomUUID().replace(/-/g, '')
+
     const timings = makeTimings('render', 'renderToReadableStream')
-  const body = await renderToReadableStream(
-    <NonceProvider value={nonce}>
-        <RemixServer context={remixContext} url={request.url} />
-    </NonceProvider>,
-    {
-      signal: request.signal,
-      onError(error: unknown) {
-        // Log streaming rendering errors from inside the shell
-        console.error(error);
-        responseStatusCode = 500;
-      },
-      nonce,
+
+    const body = await renderToReadableStream(
+        <NonceProvider value={nonce}>
+            <RemixServer context={remixContext} url={request.url} />
+        </NonceProvider>,
+        {
+            signal: request.signal,
+            onError(error: unknown) {
+                // Log streaming rendering errors from inside the shell
+                console.error(error)
+                responseStatusCode = 500
+            },
+            nonce,
+        },
+    )
+
+    if (isbot(request.headers.get('user-agent')!)) {
+        await body.allReady
     }
-  );
 
-  if (isbot(request.headers.get("user-agent"))) {
-    await body.allReady;
-  }
+    responseHeaders.set('Content-Type', 'text/html')
+    responseHeaders.append('Server-Timing', timings.toString())
 
-  responseHeaders.set("Content-Type", "text/html");
-  responseHeaders.append('Server-Timing', timings.toString())
-  
-  return new Response(body, {
-    headers: responseHeaders,
-    status: responseStatusCode,
-  });
+    return new Response(body, {
+        headers: responseHeaders,
+        status: responseStatusCode,
+    })
 }

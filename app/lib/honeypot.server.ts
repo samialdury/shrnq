@@ -7,16 +7,16 @@ if (!honeypotSecret) {
 }
 
 export const honeypot = new Honeypot({
-	encryptionSeed: honeypotSecret,
+    encryptionSeed: honeypotSecret,
 })
 
 export function checkHoneypot(formData: FormData) {
-	try {
-		honeypot.check(formData)
-	} catch (error) {
-		if (error instanceof SpamError) {
-			throw new Response('Form not submitted properly', { status: 400 })
-		}
-		throw error
-	}
+    try {
+        honeypot.check(formData)
+    } catch (error) {
+        if (error instanceof SpamError) {
+            throw new Response('Form not submitted properly', { status: 400 })
+        }
+        throw error
+    }
 }
