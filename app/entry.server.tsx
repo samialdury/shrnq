@@ -8,6 +8,9 @@ import type { AppLoadContext, EntryContext } from "@remix-run/cloudflare";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToReadableStream } from "react-dom/server";
+import { NonceProvider } from "./lib/nonce-provider";
+import { combineHeaders } from "./lib/utils";
+import { makeTimings } from "./lib/timing.server";
 
 export default async function handleRequest(
   request: Request,
@@ -19,8 +22,13 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+    const nonce = Math.random().toString(36).slice(2)
+    console.log('\nincoming request\n', {nonce, loadContext})
+    const timings = makeTimings('render', 'renderToReadableStream')
   const body = await renderToReadableStream(
-    <RemixServer context={remixContext} url={request.url} />,
+    <NonceProvider value={nonce}>
+        <RemixServer context={remixContext} url={request.url} />
+    </NonceProvider>,
     {
       signal: request.signal,
       onError(error: unknown) {
@@ -28,6 +36,7 @@ export default async function handleRequest(
         console.error(error);
         responseStatusCode = 500;
       },
+      nonce,
     }
   );
 
@@ -36,6 +45,8 @@ export default async function handleRequest(
   }
 
   responseHeaders.set("Content-Type", "text/html");
+  responseHeaders.append('Server-Timing', timings.toString())
+  
   return new Response(body, {
     headers: responseHeaders,
     status: responseStatusCode,

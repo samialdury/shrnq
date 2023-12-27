@@ -1,4 +1,5 @@
-import { json, type LoaderFunctionArgs, type MetaFunction } from "@remix-run/cloudflare";
+import { ActionFunctionArgs, json, type LoaderFunctionArgs, type MetaFunction } from "@remix-run/cloudflare";
+import { Form } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,22 +8,25 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-interface Env {
-    SHRNQ: KVNamespace;
-}
-
-export async function loader({context}: LoaderFunctionArgs) {
-    let env = context.env as Env;
-
-     await env.SHRNQ.put("test", "test", {expirationTtl: 60});
+export async function loader({context: {env}}: LoaderFunctionArgs) {
+     await env.SHRNQ.put("test", "test");
 
     return json({hello: "world"});
-} 
+}
+
+export async function action({context: {env}}: ActionFunctionArgs) {
+        
+    return json({test: 1});
+}
 
 export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
+      <Form method="POST">
+        <input type="text" name="test" />
+        <button type="submit">Submit</button>
+      </Form>
       <ul>
         <li>
           <a
