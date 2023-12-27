@@ -1,3 +1,4 @@
+import globalStyleSheetUrl from '#app/styles/global.css'
 import {
     json,
     ActionFunctionArgs,
@@ -18,17 +19,17 @@ import {
     useFetchers,
     useLoaderData,
 } from '@remix-run/react'
-import { Theme, getTheme, setTheme } from './lib/theme.server'
-import { ClientHintCheck, getHints, useHints } from './lib/client-hints'
-import { honeypot } from './lib/honeypot.server'
-import { csrf } from './lib/csrf.server'
-import { combineHeaders, getDomainUrl } from './lib/utils'
-import { makeTimings } from './lib/timing.server'
+import { Theme, getTheme, setTheme } from '#app/lib/theme.server'
+import { ClientHintCheck, getHints, useHints } from '#app/lib/client-hints'
+import { honeypot } from '#app/lib/honeypot.server'
+import { csrf } from '#app/lib/csrf.server'
+import { combineHeaders, getDomainUrl } from '#app/lib/utils'
+import { makeTimings } from '#app/lib/timing.server'
 import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
-import { useNonce } from './lib/nonce-provider'
-import { useRequestInfo } from './lib/request-info'
-import { GeneralErrorBoundary } from './lib/error-boundary'
+import { useNonce } from '#app/lib/nonce-provider'
+import { useRequestInfo } from '#app/lib/request-info'
+import { GeneralErrorBoundary } from '#app/lib/error-boundary'
 import { useForm } from '@conform-to/react'
 import { parse } from '@conform-to/zod'
 import { z } from 'zod'
@@ -38,6 +39,22 @@ const ThemeFormSchema = z.object({
 })
 
 export const links: LinksFunction = () => [
+    {
+        rel: 'preconnect',
+        href: 'https://rsms.me',
+    },
+    // Preload CSS as a resource to avoid render blocking
+    { rel: 'preload', href: 'https://rsms.me/inter/inter.css', as: 'style' },
+    { rel: 'preload', href: globalStyleSheetUrl, as: 'style' },
+    ...(cssBundleHref
+        ? [{ rel: 'preload', href: cssBundleHref, as: 'style' }]
+        : []),
+
+    {
+        rel: 'stylesheet',
+        href: 'https://rsms.me/inter/inter.css',
+    },
+    { rel: 'stylesheet', href: globalStyleSheetUrl },
     ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
 ]
 
@@ -139,8 +156,6 @@ function App() {
     const nonce = useNonce()
     const theme = useTheme()
 
-    console.log('\nApp\n', { nonce, theme })
-
     return (
         <Document
             nonce={nonce}
@@ -224,7 +239,7 @@ function Document({
     env?: Record<string, string>
 }) {
     return (
-        <html lang="en" className={`${theme} h-full overflow-x-hidden`}>
+        <html lang="en" className={`${theme}`}>
             <head>
                 <ClientHintCheck nonce={nonce} />
                 <Meta />
@@ -235,7 +250,7 @@ function Document({
                 />
                 <Links />
             </head>
-            <body className="bg-background text-foreground">
+            <body className="bg-background text-foreground min-h-screen overflow-x-hidden overflow-y-scroll font-sans antialiased">
                 {children}
                 <script
                     nonce={nonce}

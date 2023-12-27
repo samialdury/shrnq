@@ -8,8 +8,8 @@ import type { AppLoadContext, EntryContext } from '@remix-run/cloudflare'
 import { RemixServer } from '@remix-run/react'
 import { isbot } from 'isbot'
 import { renderToReadableStream } from 'react-dom/server'
-import { NonceProvider } from './lib/nonce-provider'
-import { makeTimings } from './lib/timing.server'
+import { NonceProvider } from '#app/lib/nonce-provider'
+import { makeTimings } from '#app/lib/timing.server'
 
 export default async function handleRequest(
     request: Request,
@@ -46,6 +46,25 @@ export default async function handleRequest(
 
     responseHeaders.set('Content-Type', 'text/html')
     responseHeaders.append('Server-Timing', timings.toString())
+
+    // CSP
+    responseHeaders.set(
+        'Content-Security-Policy-Report-Only',
+        [
+            "default-src 'self'",
+            "script-src 'self' 'strict-dynamic' 'nonce-" + nonce + "'",
+            "script-src-attr 'nonce-" + nonce + "'",
+            "style-src 'self' 'nonce-" + nonce + "'",
+            "img-src 'self'",
+            "font-src 'self'",
+            "media-src 'self'",
+            "frame-src 'self'",
+            `connect-src 'self' ${
+                process.env.NODE_ENV === 'development' ? 'ws:' : ''
+            }`,
+            "object-src 'none'",
+        ].join('; '),
+    )
 
     return new Response(body, {
         headers: responseHeaders,
