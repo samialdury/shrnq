@@ -163,6 +163,7 @@ export default function Index() {
                     </div>
                 </Field>
                 <Button
+                    color="cyan"
                     className="w-full"
                     type="submit"
                     disabled={fetcher.state !== 'idle'}

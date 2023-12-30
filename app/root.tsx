@@ -41,7 +41,6 @@ import {
 import { Link } from '#app/components/ui/link'
 import { useCallback } from 'react'
 import { TailwindIndicator } from '#app/components/tailwind-indicator'
-import { Icons } from '#app/components/icons'
 import { Button } from '#app/components/ui/button'
 
 const ThemeFormSchema = z.object({
@@ -210,11 +209,11 @@ function Header({
     userPreferenceTheme: Theme | null
 }) {
     return (
-        <header className="sticky top-0 z-10 border-b border-zinc-950/10 bg-white px-6 py-4 sm:px-8 lg:z-10 lg:flex lg:h-16 lg:items-center lg:py-0 dark:border-white/10 dark:bg-zinc-900">
+        <header className="sticky top-0 z-10 border-b border-zinc-950/10 bg-white px-6 py-4 sm:px-8 lg:z-10 lg:flex lg:h-16 lg:items-center lg:py-0 dark:border-white/5 dark:bg-zinc-900">
             <div className="mx-auto flex w-full max-w-xl items-center justify-between lg:max-w-7xl">
                 <div>
                     <Link href="/" aria-label="Home">
-                        <div className="font-display whitespace-nowrap text-lg font-normal lg:text-2xl">
+                        <div className="whitespace-nowrap font-display text-lg font-normal lg:text-2xl">
                             <span>sh</span>
                             <span className="text-cyan-400">rn</span>
                             <span>q</span>
@@ -223,14 +222,6 @@ function Header({
                 </div>
                 <div className="flex items-center justify-center">
                     <ThemeSwitch userPreference={userPreferenceTheme} />
-                    <Button
-                        plain
-                        href="https://github.com/samialdury/shrnq"
-                        target="_blank"
-                        title="View on GitHub"
-                    >
-                        <Icons.github className="size-5" />
-                    </Button>
                 </div>
             </div>
             {/* <div className="mx-auto mt-5 flex max-w-xl lg:hidden"></div> */}
@@ -241,9 +232,27 @@ function Header({
 function Footer() {
     return (
         <footer className="mt-32 w-full">
-            <div className="w-full border-t border-zinc-950/10 bg-white py-4 dark:border-white/10 dark:bg-zinc-900">
-                <p className="text-center text-sm leading-6 text-slate-500 dark:text-slate-400">
-                    &copy; {new Date().getFullYear()} Sami Al-Dury
+            <div className="w-full border-t border-zinc-950/10 bg-white py-4 dark:border-white/5 dark:bg-zinc-900">
+                <p className="text-balance text-center text-sm leading-loose text-slate-500 dark:text-slate-400">
+                    Built by{' '}
+                    <a
+                        href="https://x.com/samialdury"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium underline underline-offset-4"
+                    >
+                        Sami Al-Dury
+                    </a>
+                    . The source code is available on{' '}
+                    <a
+                        href="https://github.com/samialdury/shrnq"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium underline underline-offset-4"
+                    >
+                        GitHub
+                    </a>
+                    .
                 </p>
             </div>
         </footer>
