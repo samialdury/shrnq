@@ -9,6 +9,11 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
+                lead: ['var(--font-lead)', ...defaultTheme.fontFamily.sans],
+                display: [
+                    ['var(--font-display)', ...defaultTheme.fontFamily.sans],
+                    { fontVariationSettings: '"wdth" 125' },
+                ],
             },
         },
     },

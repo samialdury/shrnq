@@ -9,8 +9,8 @@
     "scripts": {
         "build": "remix build",
         "dev": "remix dev --manual -c \"npm run start\"",
-        "format": "prettier --cache --cache-location ./node_modules/.cache/prettier --log-level warn --write .",
-        "lint": "eslint --max-warnings 0 --cache --cache-location ./node_modules/.cache/eslint --fix .",
+        "format": "prettier --cache --cache-location ./.cache/prettier --log-level warn --write .",
+        "lint": "eslint --max-warnings 0 --cache --cache-location ./.cache/eslint --fix .",
         "start": "wrangler pages dev --kv=SHRNQ --compatibility-date=2023-12-25 ./public",
         "typecheck": "tsc"
     },
@@ -19,6 +19,8 @@
         "@conform-to/zod": "0.9.1",
         "@epic-web/client-hints": "1.2.2",
         "@epic-web/invariant": "1.0.0",
+        "@headlessui/react": "2.0.0-alpha.3",
+        "@heroicons/react": "2.1.1",
         "@remix-run/cloudflare": "2.4.1",
         "@remix-run/cloudflare-pages": "2.4.1",
         "@remix-run/css-bundle": "2.4.1",
@@ -30,6 +32,7 @@
         "intl-parse-accept-language": "1.0.0",
         "is-ip": "5.0.1",
         "isbot": "4.1.0",
+        "nanoid": "5.0.4",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "remix-utils": "7.4.0",

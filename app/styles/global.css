@@ -5,6 +5,8 @@
 @layer base {
     :root {
         --font-sans: 'Inter';
+        --font-display: 'Mona-Sans';
+        --font-lead: 'Mona-Sans';
     }
 
     @supports (font-variation-settings: normal) {

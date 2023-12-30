@@ -26,8 +26,8 @@ export function getErrorMessage(error: unknown) {
 
 export function GeneralErrorBoundary({
     defaultStatusHandler = ({ error }) => (
-        <p>
-            {error.status} {error.data}
+        <p className="pt-20 text-center text-lg font-semibold">
+            {error.status} {error.statusText}
         </p>
     ),
     statusHandlers,
@@ -45,13 +45,13 @@ export function GeneralErrorBoundary({
     }
 
     return (
-        <div className="text-h2 container flex items-center justify-center p-20">
+        <>
             {isRouteErrorResponse(error)
                 ? (statusHandlers?.[error.status] ?? defaultStatusHandler)({
                       error,
                       params,
                   })
                 : unexpectedErrorHandler(error)}
-        </div>
+        </>
     )
 }

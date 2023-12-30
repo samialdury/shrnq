@@ -33,18 +33,41 @@ import { GeneralErrorBoundary } from '#app/lib/error-boundary'
 import { useForm } from '@conform-to/react'
 import { parse } from '@conform-to/zod'
 import { z } from 'zod'
+import {
+    SunIcon,
+    MoonIcon,
+    ComputerDesktopIcon,
+} from '@heroicons/react/24/outline'
+import { Link } from '#app/components/ui/link'
+import { useCallback } from 'react'
+import { TailwindIndicator } from '#app/components/tailwind-indicator'
+import { Icons } from '#app/components/icons'
+import { Button } from '#app/components/ui/button'
 
 const ThemeFormSchema = z.object({
     theme: z.enum(['system', 'light', 'dark']),
 })
+
+{
+    /* <link href="https://fonts.cdnfonts.com/css/mona-sans" rel="stylesheet"> */
+}
 
 export const links: LinksFunction = () => [
     {
         rel: 'preconnect',
         href: 'https://rsms.me',
     },
+    {
+        rel: 'preconnect',
+        href: 'https://fonts.cdnfonts.com',
+    },
     // Preload CSS as a resource to avoid render blocking
     { rel: 'preload', href: 'https://rsms.me/inter/inter.css', as: 'style' },
+    {
+        rel: 'preload',
+        href: 'https://fonts.cdnfonts.com/css/mona-sans',
+        as: 'style',
+    },
     { rel: 'preload', href: globalStyleSheetUrl, as: 'style' },
     ...(cssBundleHref
         ? [{ rel: 'preload', href: cssBundleHref, as: 'style' }]
@@ -53,6 +76,10 @@ export const links: LinksFunction = () => [
     {
         rel: 'stylesheet',
         href: 'https://rsms.me/inter/inter.css',
+    },
+    {
+        rel: 'stylesheet',
+        href: 'https://fonts.cdnfonts.com/css/mona-sans',
     },
     { rel: 'stylesheet', href: globalStyleSheetUrl },
     ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
@@ -162,22 +189,64 @@ function App() {
             theme={theme}
             //  env={data.ENV}
         >
-            <div className="flex h-screen flex-col justify-between">
-                <header className="container py-6">
-                    <nav></nav>
-                </header>
+            <div className="relative flex min-h-screen flex-col">
+                <Header
+                    userPreferenceTheme={data.requestInfo.userPrefs.theme}
+                />
 
                 <div className="flex-1">
                     <Outlet />
                 </div>
 
-                <footer className="container flex justify-between pb-5">
-                    <ThemeSwitch
-                        userPreference={data.requestInfo.userPrefs.theme}
-                    />
-                </footer>
+                <Footer />
             </div>
         </Document>
+    )
+}
+
+function Header({
+    userPreferenceTheme,
+}: {
+    userPreferenceTheme: Theme | null
+}) {
+    return (
+        <header className="sticky top-0 z-10 border-b border-zinc-950/10 bg-white px-6 py-4 sm:px-8 lg:z-10 lg:flex lg:h-16 lg:items-center lg:py-0 dark:border-white/10 dark:bg-zinc-900">
+            <div className="mx-auto flex w-full max-w-xl items-center justify-between lg:max-w-7xl">
+                <div>
+                    <Link href="/" aria-label="Home">
+                        <div className="font-display whitespace-nowrap text-lg font-normal lg:text-2xl">
+                            <span>sh</span>
+                            <span className="text-cyan-400">rn</span>
+                            <span>q</span>
+                        </div>
+                    </Link>
+                </div>
+                <div className="flex items-center justify-center">
+                    <ThemeSwitch userPreference={userPreferenceTheme} />
+                    <Button
+                        plain
+                        href="https://github.com/samialdury/shrnq"
+                        target="_blank"
+                        title="View on GitHub"
+                    >
+                        <Icons.github className="size-5" />
+                    </Button>
+                </div>
+            </div>
+            {/* <div className="mx-auto mt-5 flex max-w-xl lg:hidden"></div> */}
+        </header>
+    )
+}
+
+function Footer() {
+    return (
+        <footer className="mt-32 w-full">
+            <div className="w-full border-t border-zinc-950/10 bg-white py-4 dark:border-white/10 dark:bg-zinc-900">
+                <p className="text-center text-sm leading-6 text-slate-500 dark:text-slate-400">
+                    &copy; {new Date().getFullYear()} Sami Al-Dury
+                </p>
+            </div>
+        </footer>
     )
 }
 
@@ -193,36 +262,41 @@ function ThemeSwitch({ userPreference }: { userPreference?: Theme | null }) {
     const mode = optimisticMode ?? userPreference ?? 'system'
     const nextMode =
         mode === 'system' ? 'light' : mode === 'light' ? 'dark' : 'system'
-    const modeLabel = {
-        light: (
-            <div>
-                <span className="sr-only">Light</span>
-            </div>
-        ),
-        dark: (
-            <div>
-                <span className="sr-only">Dark</span>
-            </div>
-        ),
-        system: (
-            <div>
-                <span className="sr-only">System</span>
-            </div>
-        ),
-    }
+
+    const getModeLabel = useCallback((mode: Theme | 'system') => {
+        const { icon: Icon, label } = {
+            light: {
+                icon: SunIcon,
+                label: 'Light',
+            },
+            dark: {
+                icon: MoonIcon,
+                label: 'Dark',
+            },
+            system: {
+                icon: ComputerDesktopIcon,
+                label: 'System',
+            },
+        }[mode]
+
+        return (
+            <Icon className="size-5">
+                <span className="sr-only">{label}</span>
+            </Icon>
+        )
+    }, [])
 
     return (
         <fetcher.Form method="POST" {...form.props}>
             <input type="hidden" name="theme" value={nextMode} />
-            <div className="flex gap-2">
-                <button
-                    type="submit"
-                    className="flex h-8 w-8 cursor-pointer items-center justify-center"
-                >
-                    {modeLabel[mode]}
-                </button>
-            </div>
-            {/* <ErrorList errors={form.errors} id={form.errorId} /> */}
+
+            <Button
+                plain
+                type="submit"
+                title={`Switch to ${nextMode.toLowerCase()}`}
+            >
+                {getModeLabel(mode)}
+            </Button>
         </fetcher.Form>
     )
 }
@@ -250,7 +324,7 @@ function Document({
                 />
                 <Links />
             </head>
-            <body className="bg-background text-foreground min-h-screen overflow-x-hidden overflow-y-scroll font-sans antialiased">
+            <body className="min-h-screen overflow-x-hidden overflow-y-scroll bg-white font-sans text-black antialiased dark:bg-zinc-900 dark:text-white">
                 {children}
                 <script
                     nonce={nonce}
@@ -258,6 +332,7 @@ function Document({
                         __html: `window.ENV = ${JSON.stringify(env)}`,
                     }}
                 />
+                <TailwindIndicator />
                 <ScrollRestoration nonce={nonce} />
                 <Scripts nonce={nonce} />
                 <LiveReload nonce={nonce} />

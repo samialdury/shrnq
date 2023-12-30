@@ -54,9 +54,11 @@ export default async function handleRequest(
             "default-src 'self'",
             "script-src 'self' 'strict-dynamic' 'nonce-" + nonce + "'",
             "script-src-attr 'nonce-" + nonce + "'",
-            "style-src 'self' 'nonce-" + nonce + "'",
+            "style-src 'self' https://rsms.me https://fonts.cdnfonts.com 'nonce-" +
+                nonce +
+                "'",
             "img-src 'self'",
-            "font-src 'self'",
+            "font-src 'self' https://rsms.me https://fonts.cdnfonts.com",
             "media-src 'self'",
             "frame-src 'self'",
             `connect-src 'self' ${
