@@ -100,10 +100,12 @@ export async function action({
 
         await kv.put(key, url)
 
+        const baseUrl = env.BASE_URL || getDomainUrl(request)
+
         return json({
             status: 'success',
             submission,
-            url: `${env.BASE_URL || getDomainUrl(request)}/${key}`,
+            url: `${baseUrl.split('://')[1]}/${key}`,
         } as const)
     } catch (err) {
         console.error(err)
@@ -174,7 +176,7 @@ export default function Index() {
             {fetcher.data?.status === 'success' && (
                 <div className="flex flex-col items-center space-y-4">
                     <ArrowDownIcon className="size-6 animate-pulse" />
-                    <output className="flex w-64 items-center justify-between">
+                    <output className="flex flex-col items-center justify-between gap-2">
                         <pre className="select-all selection:bg-gray-200 dark:selection:bg-gray-600">
                             {fetcher.data.url}
                         </pre>
