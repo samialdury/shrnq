@@ -3,7 +3,6 @@ import { checkHoneypot } from '#app/lib/honeypot.server'
 import {
     ActionFunctionArgs,
     json,
-    type LoaderFunctionArgs,
     type MetaFunction,
 } from '@remix-run/cloudflare'
 import { useFetcher } from '@remix-run/react'
@@ -26,7 +25,6 @@ import { useState } from 'react'
 import { getDomainUrl } from '#app/lib/utils'
 
 const FormSchema = z.object({
-    // THe url must start with https://
     url: z
         .string()
         .url()
@@ -41,13 +39,7 @@ const alphabet =
     '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 const nanoid = customAlphabet(alphabet, 5)
 
-export async function loader({ context: { env } }: LoaderFunctionArgs) {
-    await env.SHRNQ.put('test', 'test')
-
-    return json({ hello: 'world' })
-}
-
-export const meta: MetaFunction<typeof loader> = () => {
+export const meta: MetaFunction = () => {
     return [
         {
             title: 'shrnq | shorten a URL',
@@ -56,7 +48,6 @@ export const meta: MetaFunction<typeof loader> = () => {
             name: 'description',
             content: 'Yet another URL shortener',
         },
-        // SEO
         {
             name: 'keywords',
             content: 'url, shortener, shorten, link, redirect',
@@ -161,9 +152,6 @@ export default function Index() {
 
     return (
         <main className="flex flex-col items-center justify-center pt-10">
-            {/* <h1 className="font-display py-8 text-center text-3xl font-light leading-tight lg:text-5xl">
-                Shorten a URL
-            </h1> */}
             <h1 className="group text-center font-display text-3xl font-light leading-tight lg:text-5xl">
                 <span>Yet another URL shortener</span>
             </h1>

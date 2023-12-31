@@ -110,6 +110,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
                     theme: getTheme(request),
                 },
             },
+            ENV: {},
             // toast,
             honeyProps,
             csrfToken,
@@ -179,11 +180,7 @@ function App() {
     const theme = useTheme()
 
     return (
-        <Document
-            nonce={nonce}
-            theme={theme}
-            //  env={data.ENV}
-        >
+        <Document nonce={nonce} theme={theme} env={data.ENV}>
             <div className="relative flex min-h-screen flex-col">
                 <Header
                     userPreferenceTheme={data.requestInfo.userPrefs.theme}
