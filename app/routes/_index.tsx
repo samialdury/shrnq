@@ -41,16 +41,39 @@ const alphabet =
     '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 const nanoid = customAlphabet(alphabet, 5)
 
-export const meta: MetaFunction<typeof loader> = () => {
-    return [
-        // TODO
-    ]
-}
-
 export async function loader({ context: { env } }: LoaderFunctionArgs) {
     await env.SHRNQ.put('test', 'test')
 
     return json({ hello: 'world' })
+}
+
+export const meta: MetaFunction<typeof loader> = () => {
+    return [
+        {
+            title: 'shrnq | shorten a URL',
+        },
+        {
+            name: 'description',
+            content: 'Yet another URL shortener',
+        },
+        // SEO
+        {
+            name: 'keywords',
+            content: 'url, shortener, shorten, link, redirect',
+        },
+        {
+            name: 'author',
+            content: 'Sami Al-Dury',
+        },
+        {
+            property: 'og:title',
+            content: 'shrnq | shorten a URL',
+        },
+        {
+            property: 'og:description',
+            content: 'Yet another URL shortener',
+        },
+    ]
 }
 
 async function getUniqueKey(kv: KVStore) {

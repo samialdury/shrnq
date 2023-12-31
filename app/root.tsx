@@ -320,13 +320,13 @@ function Document({
     return (
         <html lang="en" className={`${theme}`}>
             <head>
-                <ClientHintCheck nonce={nonce} />
-                <Meta />
                 <meta charSet="utf-8" />
                 <meta
                     name="viewport"
                     content="width=device-width,initial-scale=1"
                 />
+                <ClientHintCheck nonce={nonce} />
+                <Meta />
                 <Links />
             </head>
             <body className="min-h-screen overflow-x-hidden overflow-y-scroll bg-white font-sans text-black antialiased dark:bg-zinc-900 dark:text-white">

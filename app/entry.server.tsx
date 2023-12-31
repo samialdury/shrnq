@@ -44,7 +44,7 @@ export default async function handleRequest(
         await body.allReady
     }
 
-    responseHeaders.set('Content-Type', 'text/html')
+    responseHeaders.set('Content-Type', 'text/html; charset=utf-8')
     responseHeaders.append('Server-Timing', timings.toString())
 
     // CSP
