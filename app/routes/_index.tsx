@@ -41,10 +41,9 @@ const alphabet =
     '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 const nanoid = customAlphabet(alphabet, 5)
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = () => {
     return [
-        { title: 'New Remix App' },
-        { name: 'description', content: 'Welcome to Remix!' },
+        // TODO
     ]
 }
 

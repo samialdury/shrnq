@@ -47,10 +47,6 @@ const ThemeFormSchema = z.object({
     theme: z.enum(['system', 'light', 'dark']),
 })
 
-{
-    /* <link href="https://fonts.cdnfonts.com/css/mona-sans" rel="stylesheet"> */
-}
-
 export const links: LinksFunction = () => [
     {
         rel: 'preconnect',

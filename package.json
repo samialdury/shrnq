@@ -21,6 +21,7 @@
         "@epic-web/invariant": "1.0.0",
         "@headlessui/react": "2.0.0-alpha.3",
         "@heroicons/react": "2.1.1",
+        "@nasa-gcn/remix-seo": "2.0.0",
         "@remix-run/cloudflare": "2.4.1",
         "@remix-run/cloudflare-pages": "2.4.1",
         "@remix-run/css-bundle": "2.4.1",

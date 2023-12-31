@@ -1,6 +1,7 @@
 import { Button } from '#app/components/ui/button'
 import { GeneralErrorBoundary } from '#app/lib/error-boundary'
 import { KVStore } from '#app/lib/kv.server'
+import { SEOHandle } from '@nasa-gcn/remix-seo'
 import { LoaderFunctionArgs, json, redirect } from '@remix-run/cloudflare'
 import { useLocation } from '@remix-run/react'
 
@@ -25,6 +26,10 @@ export async function loader({
     return redirect(targetUrl, {
         status: 301,
     })
+}
+
+export const handle: SEOHandle = {
+    getSitemapEntries: () => null,
 }
 
 export default function NotFound() {
