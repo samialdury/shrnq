@@ -11,7 +11,7 @@
 
     @supports (font-variation-settings: normal) {
         :root {
-            --font-sans: 'Inter var';
+            --font-sans: 'InterVariable';
         }
     }
 
