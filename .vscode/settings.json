@@ -11,7 +11,8 @@
         "node:stream/consumers",
         "node:test",
         "console",
-        "node:console"
+        "node:console",
+        "@epic-web/invariant"
     ],
     "typescript.tsdk": "node_modules/typescript/lib",
     "typescript.enablePromptUseWorkspaceTsdk": true,

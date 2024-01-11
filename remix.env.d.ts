@@ -8,7 +8,10 @@ declare module '@remix-run/cloudflare' {
     export interface AppLoadContext {
         env: {
             SHRNQ: KVNamespace
-            BASE_URL: string
+            NODE_ENV: 'development' | 'production'
+            BASE_URL: string | undefined
+            SESSION_SECRET: string | undefined
+            HONEYPOT_SECRET: string | undefined
         }
     }
 }

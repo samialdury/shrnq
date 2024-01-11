@@ -23,7 +23,7 @@ import { Theme, getTheme, setTheme } from '#app/lib/theme.server'
 import { ClientHintCheck, getHints, useHints } from '#app/lib/client-hints'
 import { honeypot } from '#app/lib/honeypot.server'
 import { csrf } from '#app/lib/csrf.server'
-import { combineHeaders, getDomainUrl } from '#app/lib/utils'
+import { combineHeaders, getDomainUrl, invariant } from '#app/lib/utils'
 import { makeTimings } from '#app/lib/timing.server'
 import { AuthenticityTokenProvider } from 'remix-utils/csrf/react'
 import { HoneypotProvider } from 'remix-utils/honeypot/react'
@@ -94,11 +94,19 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return headers
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({
+    request,
+    context: { env },
+}: LoaderFunctionArgs) {
+    invariant(env.SESSION_SECRET, 'Missing SESSION_SECRET')
+    invariant(env.HONEYPOT_SECRET, 'Missing HOENYPOT_SECRET')
+
     const timings = makeTimings('root loader')
     // const { toast, headers: toastHeaders } = await getToast(request)
-    const honeyProps = honeypot.getInputProps()
-    const [csrfToken, csrfCookieHeader] = await csrf.commitToken()
+    const honeyProps = honeypot(env.HONEYPOT_SECRET).getInputProps()
+    const [csrfToken, csrfCookieHeader] = await csrf(
+        env.SESSION_SECRET,
+    ).commitToken()
 
     return json(
         {

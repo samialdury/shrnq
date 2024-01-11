@@ -22,7 +22,7 @@ import {
     ArrowDownIcon,
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
-import { getDomainUrl } from '#app/lib/utils'
+import { getDomainUrl, invariant } from '#app/lib/utils'
 
 const FormSchema = z.object({
     url: z
@@ -82,9 +82,12 @@ export async function action({
     request,
     context: { env },
 }: ActionFunctionArgs) {
+    invariant(env.SESSION_SECRET, 'Missing SESSION_SECRET')
+    invariant(env.HONEYPOT_SECRET, 'Missing HOENYPOT_SECRET')
+
     const formData = await request.formData()
-    await validateCSRF(formData, request.headers)
-    checkHoneypot(formData)
+    await validateCSRF(formData, request.headers, env.SESSION_SECRET)
+    checkHoneypot(formData, env.HONEYPOT_SECRET)
 
     const submission = parse(formData, {
         schema: FormSchema,

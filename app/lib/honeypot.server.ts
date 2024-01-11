@@ -1,18 +1,14 @@
 import { Honeypot, SpamError } from 'remix-utils/honeypot/server'
 
-const honeypotSecret = 'test'
-
-if (!honeypotSecret) {
-    throw new Error('Missing HONEYPOT_SECRET environment variable')
+export function honeypot(honeypotSecret: string) {
+    return new Honeypot({
+        encryptionSeed: honeypotSecret,
+    })
 }
 
-export const honeypot = new Honeypot({
-    encryptionSeed: honeypotSecret,
-})
-
-export function checkHoneypot(formData: FormData) {
+export function checkHoneypot(formData: FormData, honeypotSecret: string) {
     try {
-        honeypot.check(formData)
+        honeypot(honeypotSecret).check(formData)
     } catch (error) {
         if (error instanceof SpamError) {
             throw new Response('Form not submitted properly', { status: 400 })
