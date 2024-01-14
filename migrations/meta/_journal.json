@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1705269911482,
+      "tag": "0000_nervous_blue_shield",
+      "breakpoints": true
+    }
+  ]
+}

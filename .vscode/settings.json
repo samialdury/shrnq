@@ -12,7 +12,8 @@
         "node:test",
         "console",
         "node:console",
-        "@epic-web/invariant"
+        "@epic-web/invariant",
+        "nanoid"
     ],
     "typescript.tsdk": "node_modules/typescript/lib",
     "typescript.enablePromptUseWorkspaceTsdk": true,

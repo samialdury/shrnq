@@ -14,7 +14,6 @@ import { ErrorMessage, Field, Label } from '#app/components/ui/fieldset'
 import { Input } from '#app/components/ui/input'
 import { CSRFInput } from '#app/lib/csrf'
 import { HoneypotInput } from '#app/lib/honeypot'
-import { customAlphabet } from 'nanoid'
 import { KVStore } from '#app/lib/kv.server'
 import {
     ClipboardDocumentIcon,
@@ -23,6 +22,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import { getDomainUrl, invariant } from '#app/lib/utils'
+import { nanoid } from '#app/lib/id.server'
 
 const FormSchema = z.object({
     url: z
@@ -34,10 +34,6 @@ const FormSchema = z.object({
 })
 
 type FormSchema = z.infer<typeof FormSchema>
-
-const alphabet =
-    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-const nanoid = customAlphabet(alphabet, 5)
 
 export const meta: MetaFunction = () => {
     return [
@@ -111,12 +107,12 @@ export async function action({
     const { url } = submission.value
 
     try {
-        const kv = new KVStore(env.SHRNQ)
+        const kv = new KVStore(env.SHRNQ_KV)
         const key = await getUniqueKey(kv)
 
         await kv.put(key, url)
 
-        const baseUrl = env.BASE_URL || getDomainUrl(request)
+        const baseUrl = getDomainUrl(request)
 
         return json({
             status: 'success',

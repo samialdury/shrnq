@@ -13,7 +13,7 @@ export async function loader({
 
     const key = url.pathname.slice(1)
 
-    const kv = new KVStore(env.SHRNQ)
+    const kv = new KVStore(env.SHRNQ_KV)
 
     const targetUrl = await kv.get(key)
 
