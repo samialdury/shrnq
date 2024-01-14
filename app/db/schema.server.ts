@@ -20,7 +20,9 @@ export const authenticators = sqliteTable(
         credentialPublicKey: text('credentialPublicKey').notNull(),
         counter: integer('counter').notNull(),
         credentialDeviceType: text('credentialDeviceType').notNull(),
-        credentialBackedUp: integer('credentialBackedUp').notNull(),
+        credentialBackedUp: integer('credentialBackedUp', {
+            mode: 'boolean',
+        }).notNull(),
         transports: text('transports').notNull(),
 
         createdAt: text('createdAt')
